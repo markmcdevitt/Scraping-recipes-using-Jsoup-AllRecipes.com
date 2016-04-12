@@ -1,0 +1,153 @@
+package web;
+
+import java.awt.Color;
+import java.util.List;
+
+import persistence.PersistenceUtil;
+import util.WebSessionUtil;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import entity.SpinnerSegment;
+import entity.SpinnerSpin;
+import entity.SpinnerTool;
+import entity.VotingTool;
+
+public class SpinnerToolConfig extends ActionSupport{
+	
+	private SpinnerTool spinnerTool;
+	private String colours;
+	private String labels;
+
+	
+	public SpinnerToolConfig(){
+		
+	}
+	
+	public String createSpinnerTool(){
+		WebSessionUtil.put("spinnerTool", spinnerTool);
+		PersistenceUtil.persist(spinnerTool);
+		return "success";
+		
+	}
+	
+	public String createSpinnerToolSegments(){
+		String[] cols = colours.split(", ");
+		String[] labs = labels.split(", ");
+		
+		int i=0;
+		for(String col:cols){
+			SpinnerSegment ss = new SpinnerSegment();
+			ss.setLabel(labs[i]);
+			ss.setColour(cols[i]);
+			
+//			if (cols[i].equalsIgnoreCase("BLACK")){
+//				ss.setColour(Color.BLACK);
+//			}
+//			else if(cols[i].equalsIgnoreCase("BLUE")){
+//				ss.setColour(Color.BLUE);
+//			}
+//			else if(cols[i].equalsIgnoreCase("CYAN")){
+//				ss.setColour(Color.CYAN);
+//			}
+//			else if(cols[i].equalsIgnoreCase("GRAY")){
+//				ss.setColour(Color.GRAY);
+//			}
+//			else if(cols[i].equalsIgnoreCase("GREEN")){
+//				ss.setColour(Color.GREEN);
+//			}
+//			else if(cols[i].equalsIgnoreCase("MAGENTA")){
+//				ss.setColour(Color.MAGENTA);
+//			}
+//			else if(cols[i].equalsIgnoreCase("ORANGE")){
+//				ss.setColour(Color.ORANGE);
+//			}
+//			else if(cols[i].equalsIgnoreCase("PINK")){
+//				ss.setColour(Color.PINK);
+//			}
+//			else if(cols[i].equalsIgnoreCase("RED")){
+//				ss.setColour(Color.RED);
+//			}
+//			else if(cols[i].equalsIgnoreCase("WHITE")){
+//				ss.setColour(Color.WHITE);
+//			}
+//			else if(cols[i].equalsIgnoreCase("YELLOW")){
+//				ss.setColour(Color.YELLOW);
+//			}
+//			else if(cols[i].equalsIgnoreCase("LIGHT GRAY")){
+//				ss.setColour(Color.LIGHT_GRAY);
+//			}
+			
+			spinnerTool = (SpinnerTool) WebSessionUtil.get("spinnerTool");
+			ss.setSpinnerTool(spinnerTool);
+			PersistenceUtil.persist(ss);
+			i++;
+		}
+		
+		return "success";
+	}
+	
+	
+	public String deleteSpinnerTools(){	
+			
+		List<SpinnerSpin> spins = PersistenceUtil.findAllSpinnerSpins();
+			for(SpinnerSpin spin:spins){
+				spin.setSpinnerSegment(null);
+				PersistenceUtil.merge(spin);
+			}
+			
+			
+		List<SpinnerSegment> segments = PersistenceUtil.findAllSpinnerSegments();
+			for(SpinnerSegment segment:segments){
+				segment.setSpinnerTool(null);
+				PersistenceUtil.merge(segment);
+			}
+			
+		List<SpinnerTool> tools = PersistenceUtil.findAllSpinnerTools();
+			
+			for(SpinnerTool tool:tools){
+				PersistenceUtil.remove(tool);
+			}
+		
+	List<SpinnerSpin> emptySpins = PersistenceUtil.findAllSpinnerSpins();
+			for(SpinnerSpin spin:emptySpins){
+				PersistenceUtil.remove(spin);
+			}
+			
+			
+		List<SpinnerSegment> emptySegments = PersistenceUtil.findAllSpinnerSegments();
+			for(SpinnerSegment segment:emptySegments){
+				PersistenceUtil.remove(segment);
+			}
+			
+			
+		return "success";
+	}
+
+	public SpinnerTool getSpinnerTool() {
+		return spinnerTool;
+	}
+
+	public void setSpinnerTool(SpinnerTool spinnerTool) {
+		this.spinnerTool = spinnerTool;
+	}
+
+	public String getColours() {
+		return colours;
+	}
+
+	public void setColours(String colours) {
+		this.colours = colours;
+	}
+
+	public String getLabels() {
+		return labels;
+	}
+
+	public void setLabels(String labels) {
+		this.labels = labels;
+	}
+	
+	
+
+}

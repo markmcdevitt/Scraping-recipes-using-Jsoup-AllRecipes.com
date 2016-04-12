@@ -1,0 +1,42 @@
+import java.io.Serializable;
+
+
+
+public class TestObject implements Serializable{
+	
+	int id;
+	int numerator;
+	int denominator;
+	
+	
+	
+	public TestObject() {
+	}
+	public TestObject(int id, int numerator, int denominator) {
+
+		this.id = id;
+		this.numerator = numerator;
+		this.denominator = denominator;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getNumerator() {
+		return numerator;
+	}
+	public void setNumerator(int numerator) {
+		this.numerator = numerator;
+	}
+	public int getDenominator() {
+		return denominator;
+	}
+	public void setDenominator(int denominator) {
+		this.denominator = denominator;
+	}
+	
+	
+
+}

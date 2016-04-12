@@ -1,0 +1,107 @@
+package web;
+
+import java.util.List;
+import java.util.Set;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import persistence.PersistenceUtil;
+import util.WebSessionUtil;
+import entity.CoinFlip;
+import entity.CoinTool;
+import entity.DiceData;
+import entity.DiceRoll;
+import entity.DiceTool;
+import entity.Rods;
+import entity.VotingAnswer;
+import entity.VotingQuestion;
+import entity.VotingTool;
+
+
+public class VotingToolConfig extends ActionSupport{
+	
+
+	private VotingTool votingTool;
+	private String vquestion;
+	private String vanswers;
+
+	public VotingTool getVotingTool() {
+		return votingTool;
+	}
+
+
+
+	public void setVotingTool(VotingTool votingTool) {
+		this.votingTool = votingTool;
+	}
+
+
+
+	public String createVotingTool(){
+		WebSessionUtil.put("votingTool", votingTool);
+		PersistenceUtil.persist(votingTool);
+		return "success";
+	}
+	
+	
+
+	public String createVotingToolQA(){
+		//get the game from the session
+		votingTool = (VotingTool) WebSessionUtil.get("votingTool");
+		
+		VotingQuestion vq = new VotingQuestion(vquestion);
+		PersistenceUtil.persist(vq);
+		votingTool.setQuestion(vq);
+			
+		String[] ans = vanswers.split(", ");
+		for(String answ: ans){
+			System.out.println("Ans "+answ);
+			VotingAnswer va = new VotingAnswer(answ);
+			PersistenceUtil.persist(va);
+			votingTool.addAnswer(va);
+		}
+
+		
+		PersistenceUtil.merge(votingTool);
+		return "success";
+	}
+	
+	
+
+	public String deleteVotingTools(){
+		
+		return "success";
+	}
+
+	
+	public String getVquestion() {
+		return vquestion;
+	}
+
+
+
+	public void setVquestion(String vquestion) {
+		this.vquestion = vquestion;
+	}
+
+
+
+	public String getVanswers() {
+		return vanswers;
+	}
+
+
+
+	public void setVanswers(String vanswers) {
+		this.vanswers = vanswers;
+	}
+
+
+
+	
+}
+
+ 
+	
+ 
+

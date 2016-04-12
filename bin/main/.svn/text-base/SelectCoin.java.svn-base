@@ -1,0 +1,51 @@
+package web;
+
+import java.util.ArrayList;
+import java.util.List;
+ 
+import com.opensymphony.xwork2.ActionSupport;
+ 
+public class SelectCoin extends ActionSupport{
+ 
+	private List<String> coinValues;
+ 
+	private String coinValue;
+ 
+
+	public List<String> getCoinValues() {
+		return coinValues;
+	}
+ 
+	public void setCoinValues(List<String> coinValues) {
+		this.coinValues = coinValues;
+	}
+ 
+	public String getCoinValue() {
+		return coinValue;
+	}
+ 
+	public void setCoinValue(String coinValue) {
+		this.coinValue = coinValue;
+	}
+ 
+	public String getDefaultCoinValue() {
+		return "1";
+	}
+ 
+	public SelectCoin(){
+ 
+		coinValues = new ArrayList<String>();
+		coinValues.add("1");
+		coinValues.add("2");
+	
+	}
+ 
+	public String execute() {
+		return SUCCESS;
+	}
+ 
+	public String display() {
+		return NONE;
+	}
+ 
+}

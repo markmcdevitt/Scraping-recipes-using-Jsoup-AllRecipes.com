@@ -1,0 +1,89 @@
+package entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+
+@Entity
+public class Game {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	protected int numberOfTeams;
+	protected String difficultyLevel;
+	
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="game_team")
+	protected Set<Team> teams = new HashSet<Team>();
+	
+	
+	public Game(){		
+	}
+
+
+	public Game(int numberOfTeams, String difficultyLevel) {
+		super();
+		this.numberOfTeams = numberOfTeams;
+		this.difficultyLevel = difficultyLevel;
+	}
+
+
+	public int getNumberOfTeams() {
+		return numberOfTeams;
+	}
+
+
+	public void setNumberOfTeams(int numberOfTeams) {
+		this.numberOfTeams = numberOfTeams;
+	}
+
+
+	public String getDifficultyLevel() {
+		return difficultyLevel;
+	}
+
+
+	public void setDifficultyLevel(String difficultyLevel) {
+		this.difficultyLevel = difficultyLevel;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public Set<Team> getTeams() {
+		return teams;
+	}
+
+
+	public void setTeams(Set<Team> teams) {
+		this.teams = teams;
+	}
+
+
+	public void addTeam(Team team){
+		teams.add(team);
+	}
+	
+	public void removeTeam(Team team){
+		teams.remove(team);
+	}
+	
+}

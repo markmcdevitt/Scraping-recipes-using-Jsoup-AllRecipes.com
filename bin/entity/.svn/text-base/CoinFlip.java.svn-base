@@ -1,0 +1,64 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "CoinFlip.findAll", query = "select o from CoinFlip o"),
+})
+
+@Entity
+public class CoinFlip {
+	
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	private String coinOneResult;
+	private String coinTwoResult;
+	private String coinThreeResult;
+	
+
+	public CoinFlip(){
+		
+	}
+	
+	public CoinFlip(String one, String two, String three){
+		coinOneResult=one;
+		coinTwoResult=two;
+		coinThreeResult=three;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getCoinOneResult() {
+		return coinOneResult;
+	}
+	public void setCoinOneResult(String coinOneResult) {
+		this.coinOneResult = coinOneResult;
+	}
+	public String getCoinTwoResult() {
+		return coinTwoResult;
+	}
+	public void setCoinTwoResult(String coinTwoResult) {
+		this.coinTwoResult = coinTwoResult;
+	}
+	
+	public String getCoinThreeResult() {
+		return coinThreeResult;
+	}
+
+	public void setCoinThreeResult(String coinThreeResult) {
+		this.coinThreeResult = coinThreeResult;
+	}
+
+}

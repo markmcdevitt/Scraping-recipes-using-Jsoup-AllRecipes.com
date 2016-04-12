@@ -1,0 +1,306 @@
+package web;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import logic.BlockGenerator;
+import logic.BlockGenerator.Difficulty;
+
+import entity.Device;
+import entity.DeviceFractionSet;
+import entity.Fraction;
+import entity.Gamestate;
+import entity.Rods;
+import entity.RodsGamestate;
+import entity.Team;
+import persistence.PersistenceUtil;
+import util.WebSessionUtil;
+
+public class RodsConfig {
+	
+	
+	private Rods rodsGame;
+	
+	
+	public Rods getRodsGame() {
+		return rodsGame;
+	}
+
+	public void setRodsGame(Rods rodsGame) {
+		this.rodsGame = rodsGame;
+	}
+
+	public String createRodsGame(){
+		
+		for(int i=0;i<rodsGame.getNumberOfTeams();i++){
+			String name = "team"+i;
+			Team team = new Team(name);
+			rodsGame.addTeam(team);
+		}
+		
+		WebSessionUtil.put("devices", PersistenceUtil.findAllDevices());
+		
+		//Choosing to put this info in the session rather than persist it until the full game is configured i.e., with teams of devices
+		WebSessionUtil.put("rodsGame", rodsGame);
+		return "success";
+	}
+	
+	
+	private String deviceArray;
+	private String teamArray;
+	
+	
+	
+	public String getDeviceArray() {
+		return deviceArray;
+	}
+	public void setDeviceArray(String deviceArray) {
+		this.deviceArray = deviceArray;
+	}
+	public String getTeamArray() {
+		return teamArray;
+	}
+	public void setTeamArray(String teamArray) {
+		this.teamArray = teamArray;
+	}
+	
+	
+	public String constructRodsTeams(){
+		
+		
+		//parse the strings into devices and teams
+		String[] deviceUsernames = deviceArray.split(",");
+		String[] teams = teamArray.split(",");
+		
+		//get the game from the session
+		Rods rodsGame = (Rods) WebSessionUtil.get("rodsGame");
+		
+		//get the list of devices
+		List<Device> devices = (List<Device>) WebSessionUtil.get("devices");
+		
+		//for each deviceUsername find the matching device and add it to its team
+		for (int i=0; i<deviceUsernames.length; i++){
+			
+			String deviceUsername = deviceUsernames[i];
+			String teamName = teams[i];
+			
+			
+			for (Device device : devices){
+				if (deviceUsername.equals(device.getUsername())){
+					
+					//find the team for this device and add device IN TEAM
+					for (Team team : rodsGame.getTeams()){
+						if (team.getTeamLabel().equals(teamName)){
+							team.addDevice(device);
+							break;
+						}
+					}
+					
+					break;
+				}
+			}
+	
+			
+		}
+		
+	
+		
+		
+		//Persist each team
+		for (Team team : rodsGame.getTeams()){
+		System.out.println("Creating team "+ team.getTeamLabel());
+		RodsGamestate rodsGamestate = new RodsGamestate();
+		Set<DeviceFractionSet> gamestateRods = new HashSet<DeviceFractionSet>();
+			
+			
+		//get the list of fractions for each device on the team	
+		File file = new File("C:\\Users\\Munnelly\\workspace\\TMS\\solutionsets.csv");
+		URI uri = (file.toURI());
+		BlockGenerator bg = new BlockGenerator();
+		List<List<Fraction>> teamFractions = new ArrayList<List<Fraction>>();
+		
+		Set<Device> players = team.getDevices();
+		int numberOnTeam = players.size();
+		System.out.println("There are "+numberOnTeam +" players on "+team.getTeamLabel());
+		
+		String level = rodsGame.getDifficultyLevel();
+		if (level.equalsIgnoreCase("Easy")){
+			System.out.println("Difficulty set to Easy");
+			teamFractions = bg.getSolutionSet(uri, BlockGenerator.Difficulty.EASY, numberOnTeam);
+		}
+		else if(level.equalsIgnoreCase("Medium")){
+			System.out.println("Difficulty set to Medium");
+			teamFractions = bg.getSolutionSet(uri, BlockGenerator.Difficulty.MEDIUM, numberOnTeam);
+		}
+		else if (level.equalsIgnoreCase("Hard")){
+			System.out.println("Difficulty set to Hard");
+			teamFractions = bg.getSolutionSet(uri, BlockGenerator.Difficulty.HARD, numberOnTeam);
+		}
+			
+		
+		
+			//create the list of fractions for each device
+			System.out.println("Distributing "+ teamFractions.size() + " team players fractions");
+			int teamNumber = teamFractions.size();
+			teamNumber--;
+			for (Device device : team.getDevices()){
+				System.out.println("Distributing "+device.getUsername() +"'s fractions from poistion teamFractions.get("+teamNumber+")");
+				List<Fraction> deviceFractions = teamFractions.get(teamNumber);
+				System.out.println("This device has "+ deviceFractions.size()+ "fractions");
+				DeviceFractionSet deviceFractionSet = new DeviceFractionSet();
+				
+				//persist each fraction before persisting the encapsulating object i.e. gamestate
+				
+				for(Fraction f: deviceFractions){
+					Fraction frac = new Fraction(f.getNumerator(), f.getDenominator());
+					PersistenceUtil.persist(frac);
+					deviceFractionSet.addFraction(frac);
+					deviceFractionSet.setDevice(device);
+					System.out.println("Fraction "+f.getNumerator()+"/"+f.getDenominator()+"from fractionSet with "+deviceFractions.size() +" fractions, added to "+device.getUsername()+"'s device on team "+team.getTeamLabel());
+				}
+				PersistenceUtil.persist(deviceFractionSet);				
+				
+				gamestateRods.add(deviceFractionSet);
+				teamNumber--;
+			}
+			
+		
+			rodsGamestate.setDeviceSets(gamestateRods);
+			
+			PersistenceUtil.persist(rodsGamestate);
+			
+			team.setGamestate(rodsGamestate);
+			
+			PersistenceUtil.persist(team);
+			
+		}
+		
+		
+		//for each deviceUsername find the matching device and add it to its team
+		for (int i=0; i<deviceUsernames.length; i++){
+			
+			String deviceUsername = deviceUsernames[i];
+			String teamName = teams[i];
+			
+			
+			for (Device device : devices){
+				if (deviceUsername.equals(device.getUsername())){
+					
+					//find the team for this device
+					for (Team team : rodsGame.getTeams()){
+						if (team.getTeamLabel().equals(teamName)){
+							device.setTeam(team);
+							PersistenceUtil.merge(device);
+							break;
+						}
+					}
+					
+					break;
+				}
+			}
+			
+		}
+		
+		
+		//NB persist from bottom up i.e., can't persist object until inner objects are already persisted.
+		PersistenceUtil.persist(rodsGame);
+		
+		return "success";
+	}
+	
+
+		public String deleteRodsGame() {
+			
+			// Get rodsGame
+			// rodsGame.delete each Team
+			// team.delete each Device
+			// Get GameState
+			// Get Fraction
+			// Get DeviceFractionSet
+			// deviceFractionSet.delete each Fraction
+			// deviceFractionSet.deleteDevice
+			// delete DeviceFractionSet from map of sets
+			// gamestate.delete deviceFractionSets map
+			// Remove gamestate from db
+			// remove gamestate from team
+			// remove team from db
+			// remove team from device
+			// remove device from db
+			// remove game from db
+
+			List<Rods> rodsGames = PersistenceUtil.findAllRods();
+
+			//for each rods game
+			for (Rods rods : rodsGames) {
+				
+				//get the entities within rods
+				Set<Team> teams = rods.getTeams();
+				
+				//can now delete rods because we have references to its encapsulated entities
+				//this deletes all the joins
+				PersistenceUtil.remove(rods);
+				
+				for (Team team : teams){
+				
+					//get the entities within team
+					Set<Device> devices = team.getDevices();				
+					RodsGamestate gameState = (RodsGamestate) team.getGamestate();
+					
+					//must remove the reference to the team from devices before deleting the team
+					for (Device device : devices){
+						device.setTeam(null);
+						device = (Device) PersistenceUtil.merge(device);
+					}
+					
+					//can now delete the team
+					PersistenceUtil.remove(team);
+					
+					
+					//get the entities within gameState
+					Set<DeviceFractionSet> dfsMap = gameState.getDeviceSets();
+					
+					//can now delete the gamestate
+					PersistenceUtil.remove(gameState);
+					
+					for (DeviceFractionSet dfs : dfsMap){
+						
+						//get the entities within dfs
+						Set<Fraction> fractions = dfs.getFractions();
+						
+						//can now delete the deviceFractionSet
+						PersistenceUtil.remove(dfs);
+						
+						
+						
+						//no entities within fractions, so just remove them
+						for (Fraction fraction : fractions){
+							PersistenceUtil.remove(fraction);
+						}
+					}
+				
+					
+				
+				}
+			}
+
+			return "success";
+		}
+
+
+	
+
+	public String deregisterAllStudents(){
+		List<Device> devices = PersistenceUtil.findAllDevices();
+		
+		for(Device device: devices){
+			PersistenceUtil.remove(device);
+		}
+		return "success";
+	}
+
+}

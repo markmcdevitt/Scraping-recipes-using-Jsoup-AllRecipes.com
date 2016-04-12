@@ -1,0 +1,110 @@
+package web;
+
+import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.List;
+
+import persistence.PersistenceUtil;
+import za.co.connext.web.components.DefaultOFCGraphDataModel;
+import za.co.connext.web.components.OFCBar3DSeriesType;
+import za.co.connext.web.components.OFCGraphController;
+import entity.DiceRoll;
+import entity.DiceTool;
+import entity.SpinnerSegment;
+import entity.SpinnerSpin;
+import entity.SpinnerTool;
+
+public class SpinnerChart {
+	
+	
+	public String createBarChart(){
+
+		List<String> labels = new LinkedList<String>();
+		List<Integer> totalData = new LinkedList<Integer>();
+		
+		 List<SpinnerTool> spinnerTools = PersistenceUtil.findAllSpinnerTools();
+		 int segs;
+		 SpinnerTool currentTool = null;
+		 int id=0;
+		 for(SpinnerTool t:spinnerTools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+				 
+			 }
+		 }
+	 
+		List<SpinnerSegment> segments= PersistenceUtil.findSpinnerSegmentsByToolId(id);
+		//setting each total to 0 occurances
+		int[] totals = new int[segments.size()];
+		
+		int i=0;
+		for(int h : totals){
+			totals[h]=0;
+			i++;
+		}
+		
+		
+		int j=0;
+		for(SpinnerSegment ss:segments){
+			String label =ss.getLabel()+" "+ss.getColour();
+			labels.add(label);	
+			List<SpinnerSpin> spins = PersistenceUtil.findSpinnerSpinBySegmentId(ss.getId());
+			totalData.add(spins.size());
+			j++;
+		}
+	
+		
+		
+		OFCGraphController controller = new OFCGraphController();	
+		
+		controller.getTitle().setText("MobiMaths Spinner Tool Data ");
+	    controller.getTitle().setColor("#d01f3c");
+	    controller.getTitle().setSize(18);
+	
+		//controller.getYMax().setMax(200);
+	    controller.getYLegend().setText("Occurrence");
+		controller.getYLegend().setColor("#ECAD00");
+		controller.getYLegend().setSize(12);
+		
+		controller.getXLegend().setText("Segment");
+		controller.getXLegend().setColor("#ECAD00");
+		controller.getXLegend().setSize(12);
+		
+		controller.getLabels().setLabels(labels);
+		
+		
+		//grid
+		controller.getColor().getXAxisColor().setColor("#e3e3e3");
+		controller.getColor().getYAxisColor().setColor("#e3e3e3");
+		controller.getColor().getXGridColor().setColor("#e3e3e3");
+		controller.getColor().getYGridColor().setColor("#e3e3e3");		
+	
+		controller.getColor().getBgColor().setColor("#FFFFFF");
+						
+		DefaultOFCGraphDataModel totalModel = new DefaultOFCGraphDataModel();		
+		totalModel.setData(totalData);
+		totalModel.setFormat(new DecimalFormat("###0.00"));
+		totalModel.setSeriesType(new OFCBar3DSeriesType(65, "#ECAD00", "Total", 10));		
+		controller.add(totalModel);
+						
+		
+		value = controller.render();		
+		System.out.println(value);
+	
+		
+		return "SUCCESS";
+	}
+	
+	
+	
+	private String value;
+	
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+}

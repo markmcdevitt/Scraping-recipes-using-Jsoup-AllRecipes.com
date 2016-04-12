@@ -1,0 +1,38 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "CoinTool.findAll", query = "select o from CoinTool o"),
+	
+})
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class CoinTool extends Tool {
+	
+	private int numberOfCoins;
+	
+	public CoinTool(){
+	}
+
+	public CoinTool(int numberOfCoins) {
+		super();
+		this.setNumberOfCoins(numberOfCoins);
+	}
+
+	public void setNumberOfCoins(int numberOfCoins) {
+		this.numberOfCoins = numberOfCoins;
+	}
+
+	public int getNumberOfCoins() {
+		return numberOfCoins;
+	}
+	
+	
+}

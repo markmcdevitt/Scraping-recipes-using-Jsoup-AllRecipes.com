@@ -1,0 +1,94 @@
+package entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+@NamedQueries( {
+//	@NamedQuery(name = "Team.findByDevice", query = "select o from team_device o where o.devices_id =:id")
+	
+})
+
+@Entity
+public class Team {
+	
+	//every entity requires an id, and we can make it auto generated
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	private String teamLabel;
+	
+	
+	//Collections require this so that it gets the objects within the colletion & creates a join table
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="team_device")
+	private Set<Device> devices = new HashSet<Device>();
+	
+	@OneToOne
+	private Gamestate gamestate;
+	
+	//No param constructor by default.
+	//If you want to create a constructor you need to also define an empty one because Hibernate requires it
+	//Otherwise you can create the object and use setters to initialise it.
+	
+	public Team(){
+		
+	}
+	
+	public Team(String teamLabel) {
+		super();
+		this.teamLabel = teamLabel;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTeamLabel() {
+		return teamLabel;
+	}
+
+	public void setTeamLabel(String teamLabel) {
+		this.teamLabel = teamLabel;
+	}
+	
+	
+	public Set<Device> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(Set<Device> devices) {
+		this.devices = devices;
+	}
+
+	public void addDevice(Device device){
+		devices.add(device);
+	}
+
+	public void removeDevice(Device device){
+		devices.remove(device);
+	}
+	public Gamestate getGamestate() {
+		return gamestate;
+	}
+
+	public void setGamestate(Gamestate gamestate) {
+		this.gamestate = gamestate;
+	}
+
+	
+}

@@ -1,0 +1,104 @@
+package web;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import entity.DiceRoll;
+import entity.Vote;
+import entity.VotingAnswer;
+import entity.VotingQuestion;
+import entity.VotingTool;
+
+import persistence.PersistenceUtil;
+
+import za.co.connext.web.components.DefaultOFCPieDataModel;
+import za.co.connext.web.components.OFCPieController;
+import za.co.connext.web.components.OFCPieSeriesType;
+
+
+public class VotingChart {
+	
+	private String value;
+	
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	public String createPieChart(){
+		
+		String[] colourList = new String[5];
+		colourList[0]="#d01f3c";
+		colourList[1]="#356aa0";
+		colourList[2]="#C79810";
+		colourList[3]="#ECAD00";
+		colourList[4]="#e3e3e3";
+				
+		List<String> labels = new LinkedList<String>();
+		
+		 List<VotingTool> tools =  PersistenceUtil.findAllVotingTools();
+		 VotingTool currentTool = null;
+		 int id=0;
+		 for(VotingTool t:tools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+			 }	 
+		}
+		System.out.println("Voting tool id "+ currentTool.getId());
+		VotingQuestion question = currentTool.getQuestion();
+		String questionLabel = question.getQuestion();
+		
+		List<VotingAnswer> answers = currentTool.getAnswers();
+		
+		//setting each total to 0 occurances
+		int[] totals = new int[answers.size()];
+	
+		int x=0;
+		for(VotingAnswer ans:answers){
+			labels.add(ans.getAnswer());
+			
+			List<Vote> votes = PersistenceUtil.findVotesbyAnswerId(ans.getId());
+			totals[x]=votes.size();
+			x=x+1;
+			
+		}
+		
+		List<Integer> totalData = new LinkedList<Integer>();
+		for(int y:totals){
+			totalData.add(y);
+			System.out.println("Adding "+y);
+		}
+		
+		List<String> colours = new LinkedList<String>();
+		int colourInt =0;
+		for(VotingAnswer ans:answers){
+			colours.add(colourList[colourInt]);
+			colourInt++;
+		}
+		
+		OFCPieController controller = new OFCPieController();
+		controller.getTitle().setText("MobiMaths Voting Tool: Question- "+questionLabel);
+        controller.getTitle().setColor("#d01f3c");
+        controller.getTitle().setSize(18);
+        
+		DefaultOFCPieDataModel model = new DefaultOFCPieDataModel();
+	//	model.setData(Arrays.asList(new Integer[]{12,5,5,3,6,4}));
+    //    model.setLabels(Arrays.asList("Car", "Bicycle", "Walk", "Bus", "DART", "Luas"));
+    //    model.setColors(Arrays.asList("#d01f3c", "#356aa0", "#C79810"));
+	//	model.setSeriesType(new OFCPieSeriesType(70, "#FFFFFF", "12px", "#404040"));
+
+		model.setData(totalData);
+		model.setLabels(labels);
+		model.setColors(colours);
+		model.setSeriesType(new OFCPieSeriesType(70, "#FFFFFF", "12px", "#404040"));
+		controller.set(model);
+
+        value = controller.render();
+
+       
+		 return "SUCCESS";
+	}
+}

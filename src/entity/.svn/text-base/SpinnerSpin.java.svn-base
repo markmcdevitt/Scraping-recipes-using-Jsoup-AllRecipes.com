@@ -1,0 +1,71 @@
+package entity;
+
+import java.awt.Color;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+
+@NamedQueries( {
+	@NamedQuery(name = "SpinnerSpin.findAll", query = "select o from SpinnerSpin o"),
+	@NamedQuery(name = "SpinnerSpin.findBySegmentId", query = "select o from SpinnerSpin o where o.spinnerSegment.id=:id")
+})
+
+@Entity
+public class SpinnerSpin {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	
+	private String colour;
+	
+	private String label;
+	
+	@OneToOne
+	private SpinnerSegment spinnerSegment;
+	
+	public SpinnerSpin(){
+		
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getColour() {
+		return colour;
+	}
+
+	public void setColour(String colour) {
+		this.colour = colour;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public SpinnerSegment getSpinnerSegment() {
+		return spinnerSegment;
+	}
+
+	public void setSpinnerSegment(SpinnerSegment spinnerSegment) {
+		this.spinnerSegment = spinnerSegment;
+	}
+
+	
+
+	
+}

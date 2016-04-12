@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/46/MOBI/trunk/TMS/src/entity
+END
+VotingQuestion.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/59/MOBI/trunk/TMS/src/entity/VotingQuestion.java
+END
+RodsResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/63/MOBI/trunk/TMS/src/entity/RodsResult.java
+END
+RodsGamestate.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/RodsGamestate.java
+END
+VotingAnswer.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/63/MOBI/trunk/TMS/src/entity/VotingAnswer.java
+END
+Device.java
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Device.java
+END
+SpinnerSegment.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/68/MOBI/trunk/TMS/src/entity/SpinnerSegment.java
+END
+Rods.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Rods.java
+END
+CoinFlip.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/57/MOBI/trunk/TMS/src/entity/CoinFlip.java
+END
+VotingTool.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/63/MOBI/trunk/TMS/src/entity/VotingTool.java
+END
+SpinnerSpin.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/70/MOBI/trunk/TMS/src/entity/SpinnerSpin.java
+END
+Game.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Game.java
+END
+DiceRoll.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/46/MOBI/trunk/TMS/src/entity/DiceRoll.java
+END
+Tool.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/68/MOBI/trunk/TMS/src/entity/Tool.java
+END
+ReceivedFractionSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/ReceivedFractionSet.java
+END
+Team.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Team.java
+END
+DeviceFractionSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/DeviceFractionSet.java
+END
+CoinTool.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/37/MOBI/trunk/TMS/src/entity/CoinTool.java
+END
+Fraction.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Fraction.java
+END
+Vote.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/63/MOBI/trunk/TMS/src/entity/Vote.java
+END
+Data.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/46/MOBI/trunk/TMS/src/entity/Data.java
+END
+DiceTool.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/46/MOBI/trunk/TMS/src/entity/DiceTool.java
+END
+Gamestate.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/36/MOBI/trunk/TMS/src/entity/Gamestate.java
+END
+DiceData.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/46/MOBI/trunk/TMS/src/entity/DiceData.java
+END
+SpinnerTool.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/68/MOBI/trunk/TMS/src/entity/SpinnerTool.java
+END

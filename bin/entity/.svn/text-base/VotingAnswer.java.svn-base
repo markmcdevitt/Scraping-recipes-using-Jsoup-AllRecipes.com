@@ -1,0 +1,53 @@
+package entity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "VotingAnswer.findAll", query = "select o from VotingAnswer o")
+})
+
+@Entity
+public class VotingAnswer {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+		
+	private String answer;
+
+	public VotingAnswer() {
+	}
+
+	public VotingAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+}

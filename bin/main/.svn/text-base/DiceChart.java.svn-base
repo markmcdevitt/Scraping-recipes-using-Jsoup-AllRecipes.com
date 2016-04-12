@@ -1,0 +1,159 @@
+package web;
+
+import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.List;
+
+import persistence.PersistenceUtil;
+import entity.DiceRoll;
+import entity.DiceTool;
+
+import za.co.connext.web.components.DefaultOFCGraphDataModel;
+import za.co.connext.web.components.OFCBar3DSeriesType;
+import za.co.connext.web.components.OFCGraphController;
+
+
+public class DiceChart {
+	
+	
+	public String createBarChart(){
+		
+		List<DiceRoll> rolls= PersistenceUtil.findAllDiceRolls();
+		List<Integer> totalData = new LinkedList<Integer>();
+		
+		List<String> labels = new LinkedList<String>();
+		int dice = getNumberOfDice();
+		
+		if(dice==1){
+			labels.add("1");
+			labels.add("2");
+			labels.add("3");
+			labels.add("4");
+			labels.add("5");
+			labels.add("6");
+			
+			
+		}
+		else if(dice ==2){
+			labels.add("2");
+			labels.add("3");
+			labels.add("4");
+			labels.add("5");
+			labels.add("6");
+			labels.add("7");
+			labels.add("8");
+			labels.add("9");
+			labels.add("10");
+			labels.add("11");
+			labels.add("12");
+			
+		}
+		else if(dice==3){
+			labels.add("3");
+			labels.add("4");
+			labels.add("5");
+			labels.add("6");
+			labels.add("7");
+			labels.add("8");
+			labels.add("9");
+			labels.add("10");
+			labels.add("11");
+			labels.add("12");
+			labels.add("13");
+			labels.add("14");
+			labels.add("15");
+			labels.add("16");
+			labels.add("17");
+			labels.add("18");
+		}
+		
+	
+		
+		
+		//setting each total to 0 occurances
+		int[] totals = new int[labels.size()];
+		
+		int i=0;
+		for(int h : totals){
+			totals[h]=0;
+			i++;
+		}
+		
+		//incrementing occurances
+		for(DiceRoll dr: rolls){
+			totals[dr.getRollTotal()-dice]++;
+		}
+		
+		int k=0;
+		for(int j: totals){
+			totalData.add(totals[k]);
+			System.out.println("Total "+labels.get(k)+" has "+ totalData.get(k));
+			k++;
+		}
+
+		
+	
+				
+		OFCGraphController controller = new OFCGraphController();	
+		
+		controller.getTitle().setText("MobiMaths Dice Tool Data ");
+        controller.getTitle().setColor("#d01f3c");
+        controller.getTitle().setSize(18);
+
+		//controller.getYMax().setMax(200);
+        controller.getYLegend().setText("Occurrence");
+		controller.getYLegend().setColor("#ECAD00");
+		controller.getYLegend().setSize(12);
+		
+		controller.getXLegend().setText("Total");
+		controller.getXLegend().setColor("#ECAD00");
+		controller.getXLegend().setSize(12);
+		
+		controller.getLabels().setLabels(labels);
+		
+		
+		//grid
+		controller.getColor().getXAxisColor().setColor("#e3e3e3");
+		controller.getColor().getYAxisColor().setColor("#e3e3e3");
+		controller.getColor().getXGridColor().setColor("#e3e3e3");
+		controller.getColor().getYGridColor().setColor("#e3e3e3");		
+
+		controller.getColor().getBgColor().setColor("#FFFFFF");
+						
+		DefaultOFCGraphDataModel totalModel = new DefaultOFCGraphDataModel();		
+		totalModel.setData(totalData);
+		totalModel.setFormat(new DecimalFormat("###0.00"));
+		totalModel.setSeriesType(new OFCBar3DSeriesType(65, "#ECAD00", "Total", 10));		
+		controller.add(totalModel);
+						
+		
+		value = controller.render();		
+		System.out.println(value);
+
+		
+		return "SUCCESS";
+	}
+	
+	
+	public int getNumberOfDice(){
+		 int dice = 0;
+		 
+		 List<DiceTool> diceTools = PersistenceUtil.findAllDiceTools();
+		 for(DiceTool dt: diceTools){
+			 dice = dt.getNumberOfDice();
+		 }
+		 return dice;
+		 
+	 }
+	
+	
+
+	private String value;
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+}

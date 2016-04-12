@@ -1,0 +1,71 @@
+package entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "ReceivedFractionSet.findById", query = "select o from ReceivedFractionSet o where o.device.id=:id")
+})
+
+@Entity
+public class ReceivedFractionSet {
+	
+	//every entity requires an id, and we can make it auto generated
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	
+	@OneToOne
+	private Device device;
+	
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="receivedfractionset_fraction")
+	private Set<Fraction> fractions = new HashSet<Fraction>();
+ 
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Set<Fraction> getFractions() {
+		return fractions;
+	}
+
+	public void setFractions(Set<Fraction> fractions) {
+		this.fractions = fractions;
+	}
+	
+	public void addFraction(Fraction fraction) {
+		this.fractions.add(fraction);
+	}
+	
+	public void removeFraction(Fraction fraction){
+		this.fractions.remove(fraction);
+	}
+
+	public Device getDevice() {
+		return device;
+	}
+
+	public void setDevice(Device device) {
+		this.device = device;
+	}
+
+	
+}

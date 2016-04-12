@@ -1,0 +1,39 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+
+
+@NamedQueries( {
+	@NamedQuery(name = "DiceTool.findAll", query = "select o from DiceTool o"),
+	
+})
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class DiceTool extends Tool{
+	
+	private int numberOfDice;
+	
+	public DiceTool(){
+	}
+
+	public DiceTool(int numberOfDice) {
+		super();
+		this.setNumberOfDice(numberOfDice);
+	}
+
+	public void setNumberOfDice(int numberOfDice) {
+		this.numberOfDice = numberOfDice;
+	}
+
+	public int getNumberOfDice() {
+		return numberOfDice;
+	}
+	
+	
+}

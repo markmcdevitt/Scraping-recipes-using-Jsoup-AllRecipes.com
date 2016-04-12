@@ -1,0 +1,27 @@
+package web;
+
+import java.util.List;
+
+import entity.Device;
+import persistence.PersistenceUtil;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+public class GroupManagement extends ActionSupport{
+	
+	
+	private List<Device> devices;	
+	public List<Device> getDevices() {
+		return devices;
+	}
+
+	public String loadAllDevices(){
+		
+		devices = PersistenceUtil.findAllDevices();
+		
+		return SUCCESS;
+	}
+	
+	
+
+}

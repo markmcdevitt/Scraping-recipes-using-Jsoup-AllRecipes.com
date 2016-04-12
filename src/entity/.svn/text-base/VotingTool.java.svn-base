@@ -1,0 +1,88 @@
+package entity;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "VotingTool.findAll", query = "select o from VotingTool o")
+})
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class VotingTool extends Tool {
+		
+	private int numberOfAnswers;
+	
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="votingtool_votinganswer")
+	private List<VotingAnswer> answers = new ArrayList<VotingAnswer>();
+	
+	private Date date;
+	
+	@OneToOne
+	private VotingQuestion question;
+	
+	
+	public VotingTool(){
+	}
+
+	public VotingTool(int numberOfAnswers) {
+		super();
+		this.setNumberOfAnswers(numberOfAnswers);
+	}
+
+	public void setNumberOfAnswers(int numberOfAnswers) {
+		this.numberOfAnswers = numberOfAnswers;
+	}
+
+	public int getNumberOfAnswers() {
+		return numberOfAnswers;
+	}
+	
+	public List<VotingAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<VotingAnswer> answers) {
+		this.answers = answers;
+	}
+
+	public VotingQuestion getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(VotingQuestion question) {
+		this.question = question;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+	
+	public void addAnswer(VotingAnswer ans){
+		answers.add(ans);
+	}
+	
+	
+}

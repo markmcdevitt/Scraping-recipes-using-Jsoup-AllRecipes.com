@@ -1,0 +1,379 @@
+
+
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
+import persistence.PersistenceUtil;
+import entity.CoinFlip;
+import entity.CoinTool;
+import entity.Device;
+import entity.DeviceFractionSet;
+import entity.DiceData;
+import entity.DiceRoll;
+import entity.DiceTool;
+import entity.Fraction;
+import entity.ReceivedFractionSet;
+import entity.SpinnerSegment;
+import entity.SpinnerSpin;
+import entity.SpinnerTool;
+import entity.Team;
+import entity.Vote;
+import entity.VotingAnswer;
+import entity.VotingQuestion;
+import entity.VotingTool;
+
+
+
+public class MobiMathsServicev3 {
+
+	
+	public MobiMathsServicev3() {
+
+		
+	}
+			
+
+	public void registerDevice(String ip, String name) {
+		Device device = new Device();
+		device.setUsername(name);
+		device.setIp(ip);
+		PersistenceUtil.persist(device);
+		
+	}
+	
+	  
+	 public Fraction[] getSolutionSet(String ip){
+		 Device device = PersistenceUtil.findDeviceByIp(ip);
+		 int deviceId = device.getId();
+		 DeviceFractionSet dfs = PersistenceUtil.findDeviceFractionsById(deviceId);
+		 Set<Fraction> fractionSet = dfs.getFractions();
+		 int noOfFractions = fractionSet.size();
+		 
+		 Fraction[] fractions = new Fraction[noOfFractions];
+		 int i =0;
+			for(Fraction f:fractionSet){
+				fractions[i] = new Fraction(f.getNumerator(),f.getDenominator());
+				i++;
+		  }
+			  return fractions;
+		  }
+		
+
+	 
+	  
+	 public static Fraction getFraction(String ip)  {  
+		 
+		  Fraction fraction = null;
+		  
+		  //Find device received fractions
+		  Device destDevice = PersistenceUtil.findDeviceByIp(ip);
+		  int destDeviceId = destDevice.getId();
+		  ReceivedFractionSet receivedFractionSet = PersistenceUtil.findRecievedFractionSetById(destDeviceId);
+		  Set<Fraction> receivedFractions = receivedFractionSet.getFractions();
+		  
+		  //Find permanent device fraction set
+		  DeviceFractionSet destDfs = PersistenceUtil.findDeviceFractionsById(destDeviceId);
+		  Set<Fraction> destFractionSet = destDfs.getFractions();
+
+		  //Return received fraction, remove it from temp set and add it to permanent set
+		  for(Fraction f: receivedFractions){
+			  fraction = f;
+			  destDfs.addFraction(f);
+			  receivedFractionSet.removeFraction(f);
+			  break;
+		}
+		  PersistenceUtil.remove(receivedFractionSet);
+		  PersistenceUtil.merge(destDfs);	
+		  	
+	    	return fraction;
+	  }
+	  public String sendFraction(Fraction fraction, String sourceIp, String destinationUsername){
+				  
+		  Device srcDevice = PersistenceUtil.findDeviceByIp(sourceIp);
+		  int srcDeviceId = srcDevice.getId();
+		  DeviceFractionSet srcDfs = PersistenceUtil.findDeviceFractionsById(srcDeviceId);
+		  Set<Fraction> srcFractionSet = srcDfs.getFractions();
+		  
+
+		  Device destDevice = PersistenceUtil.findDeviceByUsername(destinationUsername);
+		  int destDeviceId = destDevice.getId();
+		  
+		  ReceivedFractionSet rfs = new ReceivedFractionSet();
+		  rfs.setDevice(destDevice);
+		  
+		  for(Fraction f: srcFractionSet){
+			  if (fraction.getNumerator() == f.getNumerator() && fraction.getDenominator()==f.getDenominator()){
+				  srcFractionSet.remove(f);
+				  rfs.addFraction(f);
+				  break;
+			  }
+		  }
+		  
+		
+		  PersistenceUtil.merge(srcDfs);	
+		  PersistenceUtil.persist(rfs);	
+				  
+		  return "success";
+	  }
+	
+	  public String[] getTeamPlayers(String ip){
+		  
+		  Device device = PersistenceUtil.findDeviceByIp(ip);
+		  int deviceId = device.getId();
+		  Team team = device.getTeam();
+		  Set<Device> players = team.getDevices();
+		  int noOfPlayers = players.size();
+		  noOfPlayers--;
+		  String[] playerNames = new String[noOfPlayers];
+		  int i=0;
+		  for(Device d: players){
+			  if (d.getId()!=deviceId){
+				  playerNames[i] = d.getUsername();
+				  i++;
+			  }
+		  }
+		  
+		  return playerNames;		  
+	  }
+	  
+ public String getUsername(String ip){
+		  
+		  Device device = PersistenceUtil.findDeviceByIp(ip);
+		  String username = device.getUsername();		  
+		  return username;		  
+	  }
+ 
+	 public void deregister(String ip){
+		 Device device = PersistenceUtil.findDeviceByIp(ip);
+		 PersistenceUtil.remove(device);
+	 }
+		  
+
+	 public void sendArray(Fraction[] fractions){
+		System.out.println("Got  array " +fractions[0].getDenominator());
+		 
+	 }
+	 
+	 /**
+	  * Coin Related 
+	  */
+	 
+	 public int getNumberOfCoins(){
+		 int coins = 0;
+		 List<CoinTool> coinTools = PersistenceUtil.findAllCoinTools();
+		 for(CoinTool ct: coinTools){
+			 coins = ct.getNumberOfCoins();
+		 }
+		 return coins;
+		 
+	 }
+	 
+	 /**
+	  * Dice Related 
+	  */
+	 
+	 public int getNumberOfDice(){
+		 int dice = 0;
+		 
+		 List<DiceTool> diceTools = PersistenceUtil.findAllDiceTools();
+		 for(DiceTool dt: diceTools){
+			 dice = dt.getNumberOfDice();
+		 }
+		 return dice;
+		 
+	 }
+	 
+	 
+	 public void sendDiceRolls(Vector<Integer> rolls){
+			
+			DiceData data = new DiceData();
+			for(Integer total:rolls){
+				DiceRoll roll = new DiceRoll();
+				roll.setRollTotal(total);
+				data.addDiceRoll(roll);
+				PersistenceUtil.persist(roll);
+			}
+			
+			PersistenceUtil.persist(data);
+		}
+	 
+	 public void sendCoinFlips(Vector<String> flips){
+			System.out.println("Got coin flips " +flips.size());
+			int numberOfCoins=0;
+			System.out.println(flips.toString());
+			
+			List<CoinTool> coinTools = PersistenceUtil.findAllCoinTools();
+				 int coinToolid=0;
+				 for(CoinTool ct: coinTools){
+					 if(ct.getId()>coinToolid){
+						 coinToolid=ct.getId();
+						 numberOfCoins = ct.getNumberOfCoins();
+						
+					 }
+					
+				 }
+			System.out.println("No of coins " +numberOfCoins);	 
+			if(numberOfCoins==1){
+				for(String result:flips){
+					CoinFlip flip = new CoinFlip();
+					flip.setCoinOneResult(result);
+					PersistenceUtil.persist(flip);
+				}
+			}
+			
+			else if(numberOfCoins==2){
+				for(int i=0;i<flips.size();i=i+2){
+					
+					CoinFlip flip = new CoinFlip();
+					String coinOneResult = flips.elementAt(i);		
+					 System.out.println("Adding flip one at element" +i +" equals "+flips.elementAt(i));
+					String coinTwoResult = flips.elementAt(i+1);			
+					 System.out.println("Adding flip two at element" +i+1 +" equals "+flips.elementAt(i+1));
+					flip.setCoinOneResult(coinOneResult);					
+					flip.setCoinTwoResult(coinTwoResult);					
+					PersistenceUtil.persist(flip);
+					}			
+			}
+			
+			else if(numberOfCoins==3){
+				for(int i=0;i<flips.size();i=i+3){
+					CoinFlip flip = new CoinFlip();
+					String coinOneResult = flips.elementAt(i);
+					String coinTwoResult = flips.elementAt(i++);
+					String coinThreeResult = flips.elementAt(i=i+2);
+					flip.setCoinOneResult(coinOneResult);
+					flip.setCoinTwoResult(coinTwoResult);
+					flip.setCoinThreeResult(coinThreeResult);
+					PersistenceUtil.persist(flip);
+					}		
+			}
+		}
+	 
+	 
+	 public void createVote(String chosenAns, String ip){
+		 Device voter =PersistenceUtil.findDeviceByIp(ip);
+		 List<VotingTool> tools =  PersistenceUtil.findAllVotingTools();
+		 VotingTool currentTool = null;
+		 int id=0;
+		 for(VotingTool t:tools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+				 
+			 }	 
+		 }
+		 
+		 List<VotingAnswer> answers =currentTool.getAnswers();
+		 for(VotingAnswer vt:answers){
+			 if(chosenAns.equalsIgnoreCase(vt.getAnswer())){
+				 Vote vote = new Vote();
+				 vote.setVoter(voter);
+				 vote.setAnswer(vt);
+				 PersistenceUtil.persist(vote);
+			}
+		 }
+			 
+		
+	 }
+	 
+	 
+	 public String[] getVoteDetails(){
+		 
+		 List<VotingTool> tools =  PersistenceUtil.findAllVotingTools();
+		 VotingTool currentTool = null;
+		 int id=0;
+		 for(VotingTool t:tools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+				 
+			 }
+		 }
+		VotingQuestion vq = currentTool.getQuestion();
+		String question = vq.getQuestion();
+		List<VotingAnswer> answers = currentTool.getAnswers();
+		int detailsNo =answers.size()+1;
+		String[] voteDetails = new String[detailsNo];
+		voteDetails[0]=question;
+		
+		int i=1;
+		for(VotingAnswer va: answers){
+			voteDetails[i]= va.getAnswer();
+			i++;
+		}
+		 
+		return voteDetails;
+	 
+	 }
+	 
+	 public String[] getSpinnerDetails(){
+		 System.out.println("GetSpinnerDetails");
+		 List<SpinnerTool> tools =  PersistenceUtil.findAllSpinnerTools();
+		 SpinnerTool currentTool = null;
+		 int id=0;
+		 for(SpinnerTool t:tools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+				 
+			 }
+		 }
+		 
+		 
+		 List<SpinnerSegment> segments = PersistenceUtil.findSpinnerSegmentsByToolId(id);
+		 int size = segments.size()*2;
+		 String[] segmentDetails = new String[size];
+		 
+		 int i=0;
+		 for(SpinnerSegment ss:segments){
+			 segmentDetails[i] =ss.getLabel();
+			 segmentDetails[i+1] =ss.getColour();
+			 i=i+2;
+		 }
+		 
+		 return segmentDetails;
+		 
+	 }
+	 
+	 
+	 public void sendSpins(Vector<String> spins){
+		 System.out.println("sendSpins");
+		 
+		 List<SpinnerTool> tools =  PersistenceUtil.findAllSpinnerTools();
+		 SpinnerTool currentTool = null;
+		 int id=0;
+		 for(SpinnerTool t:tools){
+			 if(t.getId()>id){
+				 id=t.getId();
+				 currentTool = t;
+				 
+			 }
+		 }
+		 
+		 List<SpinnerSegment> segments = PersistenceUtil.findSpinnerSegmentsByToolId(id);
+		 SpinnerSegment segment = null;
+		 for(int i=0;i<spins.size();i=i+2){
+			 SpinnerSpin ss = new SpinnerSpin();
+			 ss.setLabel(spins.get(i));
+			 ss.setColour(spins.get(i+1));
+			 System.out.println("set color to "+spins.get(i+1));
+			 
+			 for(SpinnerSegment seg:segments){
+				 System.out.println("seg "+seg.getColour()+seg.getLabel());
+				 if(seg.getColour().equalsIgnoreCase(ss.getColour())&& seg.getLabel().equalsIgnoreCase(ss.getLabel())){
+					 System.out.println("Match found");
+					 segment = seg;
+				 }
+			 }
+			
+			 ss.setSpinnerSegment(segment);
+			 PersistenceUtil.persist(ss);
+			 
+		 }
+		 
+		 
+		 
+	 }
+
+}

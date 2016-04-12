@@ -1,0 +1,62 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+
+@NamedQueries( {
+	@NamedQuery(name = "Vote.findAll", query = "select o from Vote o"),
+	@NamedQuery(name = "Vote.findByAnswerId", query = "select o from Vote o where o.answer.id=:id")
+})
+
+
+@Entity
+public class Vote {
+	
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	
+	@OneToOne
+	private Device voter;
+	
+	@OneToOne
+	private VotingAnswer answer;
+	
+	public Vote(){
+		
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public Device getVoter() {
+		return voter;
+	}
+
+	public void setVoter(Device voter) {
+		this.voter = voter;
+	}
+
+	public VotingAnswer getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(VotingAnswer answer) {
+		this.answer = answer;
+	}
+	
+	
+
+}

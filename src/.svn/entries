@@ -1,0 +1,113 @@
+8
+
+dir
+56
+https://mobimaths.jira.com/svn/MOBI/trunk/TMS/src
+https://mobimaths.jira.com/svn
+
+
+
+2010-12-09T17:07:24.950267Z
+55
+jennymunnelly@gmail.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e6edf6fb-f266-4316-afb4-e53d95876a76
+
+META-INF
+dir
+
+MobiMathsServicev3.java
+file
+68
+
+
+
+2011-02-15T17:11:32.565000Z
+
+2010-12-20T15:38:48.122316Z
+68
+jennymunnelly@gmail.com
+has-props
+
+TestObject.java
+file
+
+
+
+
+2011-02-15T17:11:35.848000Z
+
+2010-12-06T10:06:27.188285Z
+34
+jennymunnelly@gmail.com
+has-props
+
+application
+dir
+
+
+
+delete
+
+com
+dir
+
+
+
+add
+
+entity
+dir
+
+
+
+delete
+
+logic
+dir
+
+
+
+delete
+
+persistence
+dir
+
+
+
+delete
+
+util
+dir
+
+
+
+delete
+
+web
+dir
+
+
+
+delete
+
+webService
+dir
+
+
+
+delete
+

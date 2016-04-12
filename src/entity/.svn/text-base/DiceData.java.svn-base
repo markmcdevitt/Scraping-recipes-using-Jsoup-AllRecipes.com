@@ -1,0 +1,59 @@
+package entity;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "DiceData.findAll", query = "select o from DiceData o"),
+	
+})
+
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class DiceData extends Data{
+
+	
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="dicedata_diceroll")
+	private Set<DiceRoll> rolls = new HashSet<DiceRoll>();
+	
+	public DiceData(){
+		
+	}
+
+	public DiceData(Set<DiceRoll> rolls ){
+		super();
+		this.rolls=rolls;
+	}
+
+	public Set<DiceRoll> getRolls() {
+		return rolls;
+	}
+
+	public void setRolls(Set<DiceRoll> rolls) {
+		this.rolls = rolls;
+	}
+	
+
+	public void addDiceRoll(DiceRoll diceRoll){
+		rolls.add(diceRoll);
+	}
+
+	public void removeDiceRoll(DiceRoll diceRoll){
+		rolls.remove(diceRoll);
+	}
+
+}
+

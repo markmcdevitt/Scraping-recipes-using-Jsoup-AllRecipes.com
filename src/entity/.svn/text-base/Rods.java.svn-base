@@ -1,0 +1,50 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+
+@NamedQueries( {
+	@NamedQuery(name = "Rods.findAll", query = "select o from Rods o"),
+	
+})
+
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Rods extends Game{
+	
+	private int numberOfBlocks;
+	private int denominator;
+	
+	public Rods(){
+	}
+
+	public Rods(int numberOfTeams, String difficultyLevel, int numberOfBlocks, int denominator) {
+		super(numberOfTeams, difficultyLevel);
+		this.numberOfBlocks = numberOfBlocks;
+		this.denominator = denominator;
+	}
+
+	public int getNumberOfBlocks() {
+		return numberOfBlocks;
+	}
+
+	public void setNumberOfBlocks(int numberOfBlocks) {
+		this.numberOfBlocks = numberOfBlocks;
+	}
+
+	public int getDenominator() {
+		return denominator;
+	}
+
+	public void setDenominator(int denominator) {
+		this.denominator = denominator;
+	}
+	
+	
+
+}

@@ -1,0 +1,42 @@
+package entity;
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class RodsResult implements Serializable{
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	
+	private int numberOfMoves;
+	private int numberOfSwaps;
+	
+	public RodsResult(){
+		
+	}
+	
+	public RodsResult(int numberOfMoves, int numberOfSwaps) {
+		this.numberOfMoves = numberOfMoves;
+		this.numberOfSwaps = numberOfSwaps;
+	}
+
+	public int getNumberOfMoves() {
+		return numberOfMoves;
+	}
+	public void setNumberOfMoves(int numberOfMoves) {
+		this.numberOfMoves = numberOfMoves;
+	}
+
+	public int getNumberOfSwaps() {
+		return numberOfSwaps;
+	}
+	public void setNumberOfSwaps(int numberOfSwaps) {
+		this.numberOfSwaps = numberOfSwaps;
+	}
+
+}

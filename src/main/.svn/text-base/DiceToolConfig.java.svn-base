@@ -1,0 +1,87 @@
+package web;
+
+import java.util.List;
+import java.util.Set;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import persistence.PersistenceUtil;
+import util.WebSessionUtil;
+import entity.CoinTool;
+import entity.Device;
+import entity.DiceData;
+import entity.DiceRoll;
+import entity.DiceTool;
+import entity.Team;
+
+
+public class DiceToolConfig extends ActionSupport{
+	
+
+	private DiceTool diceTool;
+	private List<DiceData> data;
+	
+	
+	public DiceTool getDiceTool() {
+		return diceTool;
+	}
+
+	public void setDiceTool(DiceTool diceTool) {
+		this.diceTool = diceTool;
+	}
+
+	public List<DiceData> getData() {
+		return data;
+	}
+
+	public void setData(List<DiceData> data) {
+		this.data = data;
+	}
+	
+	public String createDiceTool(){
+				
+		PersistenceUtil.persist(diceTool);
+		return "success";
+	}
+	
+
+	public String loadDiceData(){
+		
+		data = PersistenceUtil.findAllDiceData();
+		System.out.println("DiceData size "+data.size());
+		
+		return "success";
+	}
+	
+	
+	public String deleteDiceTools(){
+		List<DiceTool> tools = PersistenceUtil.findAllDiceTools();
+		
+		for(DiceTool dt:tools){
+			
+			List<DiceData> data = PersistenceUtil.findAllDiceData();
+			PersistenceUtil.remove(dt);
+			
+				for(DiceData dd: data){
+					
+					Set<DiceRoll>rolls = dd.getRolls();
+					PersistenceUtil.remove(dd);
+						for(DiceRoll dr: rolls){
+							PersistenceUtil.remove(dr);
+						}
+				}
+		}
+		
+		return "success";
+	}
+	
+	
+	
+	
+	
+}
+
+ 
+	
+ 
+

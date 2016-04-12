@@ -1,0 +1,48 @@
+package entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+
+
+@NamedQueries( {
+	@NamedQuery(name = "DiceRoll.findAll", query = "select o from DiceRoll o"),
+})
+
+@Entity
+public class DiceRoll {
+	
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	private int rollTotal;
+	
+	public DiceRoll(){
+		
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getRollTotal() {
+		return rollTotal;
+	}
+
+	public void setRollTotal(int rollTotal) {
+		this.rollTotal = rollTotal;
+	}
+
+	
+
+	
+}

@@ -1,0 +1,164 @@
+package web;
+
+import java.text.DecimalFormat;
+import java.util.LinkedList;
+import java.util.List;
+
+import persistence.PersistenceUtil;
+import entity.CoinFlip;
+import entity.CoinTool;
+import entity.DiceRoll;
+import entity.DiceTool;
+
+import za.co.connext.web.components.DefaultOFCGraphDataModel;
+import za.co.connext.web.components.OFCBar3DSeriesType;
+import za.co.connext.web.components.OFCGraphController;
+
+
+public class CoinChart {
+	
+	
+	public String createBarChart(){
+		
+		List<CoinFlip> flips= PersistenceUtil.findAllCoinFlips();
+		List<Integer> totalData = new LinkedList<Integer>();
+		
+		List<String> labels = new LinkedList<String>();
+		int coins = getNumberOfCoins();
+		
+		if(coins==1){
+			labels.add("Heads");	
+			labels.add("Tails");	
+		}
+		else if(coins ==2){
+			labels.add("Heads Heads");	
+			labels.add("Heads Tails");
+			labels.add("Tails Heads ");
+			labels.add("Tails Tails");
+			
+		}
+		else if(coins==3){
+			labels.add("Heads Heads Heads");	
+			labels.add("Heads Heads Tails");
+			labels.add("Heads Tails Heads");
+			labels.add("Tails Heads Heads");
+			labels.add("Tails Tails Heads");
+			labels.add("Heads Tails Tails");
+			labels.add("Tails Heads Tails");
+			labels.add("Tails Tails Tails");
+		}
+		
+
+		//setting each total to 0 occurances
+		int[] totals = new int[labels.size()];
+		int i=0;
+		for(int s : totals){
+			totals[i]=0;
+			i++;
+		}
+	
+		
+		if(coins==1){
+			for(CoinFlip cf:flips){
+				if(cf.getCoinOneResult().equalsIgnoreCase("H")){
+					totals[0]++;
+				}
+				else if(cf.getCoinOneResult().equalsIgnoreCase("T")){
+					totals[1]++;
+				}
+			}
+		}
+		else if(coins ==2){
+			for(CoinFlip cf:flips){
+				if(cf.getCoinOneResult().equalsIgnoreCase("H") && cf.getCoinTwoResult().equalsIgnoreCase("H")){
+					totals[0]++;
+				}
+				else if(cf.getCoinOneResult().equalsIgnoreCase("H") && cf.getCoinTwoResult().equalsIgnoreCase("T")){
+					totals[1]++;
+				}
+				else if(cf.getCoinOneResult().equalsIgnoreCase("T") && cf.getCoinTwoResult().equalsIgnoreCase("H")){
+					totals[2]++;
+				}
+				else if(cf.getCoinOneResult().equalsIgnoreCase("T") && cf.getCoinTwoResult().equalsIgnoreCase("T")){
+					totals[3]++;
+				}
+			}
+			
+		}
+		
+
+		
+		
+		int k=0;
+		for(int j: totals){
+			totalData.add(totals[k]);
+			System.out.println("Result "+labels.get(k)+" has "+ totalData.get(k));
+			k++;
+		}
+
+		
+	
+				
+		OFCGraphController controller = new OFCGraphController();	
+		
+		controller.getTitle().setText("MobiMaths Coin Tool Data ");
+        controller.getTitle().setColor("#d01f3c");
+        controller.getTitle().setSize(18);
+
+		//controller.getYMax().setMax(150);
+        controller.getYLegend().setText("Total Flips");
+		controller.getYLegend().setColor("#ECAD00");
+		controller.getYLegend().setSize(12);
+		
+		controller.getXLegend().setText("Results");
+		controller.getXLegend().setColor("#ECAD00");
+		controller.getXLegend().setSize(12);
+		
+		controller.getLabels().setLabels(labels);
+		
+		
+		//grid
+		controller.getColor().getXAxisColor().setColor("#e3e3e3");
+		controller.getColor().getYAxisColor().setColor("#e3e3e3");
+		controller.getColor().getXGridColor().setColor("#e3e3e3");
+		controller.getColor().getYGridColor().setColor("#e3e3e3");		
+
+		controller.getColor().getBgColor().setColor("#FFFFFF");
+						
+		DefaultOFCGraphDataModel totalModel = new DefaultOFCGraphDataModel();		
+		totalModel.setData(totalData);
+		totalModel.setFormat(new DecimalFormat("###0.00"));
+		totalModel.setSeriesType(new OFCBar3DSeriesType(65, "#ECAD00", "Total", 10));		
+		controller.add(totalModel);
+						
+		
+		value = controller.render();		
+		System.out.println(value);
+
+		
+		return "SUCCESS";
+	}
+	
+	
+	public int getNumberOfCoins(){
+		 int coins = 0;
+		 
+		 List<CoinTool> coinTools = PersistenceUtil.findAllCoinTools();
+		 for(CoinTool ct: coinTools){
+			 coins = ct.getNumberOfCoins();
+		 }
+		 return coins;
+		 
+	 }
+	
+	
+
+	private String value;
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+}

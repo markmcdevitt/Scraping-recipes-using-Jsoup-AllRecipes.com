@@ -1,0 +1,36 @@
+package entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class RodsGamestate extends Gamestate{
+	
+	//inherits id from superclass
+
+	
+	//Error solved: have to explicitly say that these store objects
+	@OneToMany (fetch = FetchType.EAGER)
+	@JoinTable(name ="rodsgamestate_devicefractionset")
+	private Set<DeviceFractionSet> deviceSets = new HashSet<DeviceFractionSet>();
+
+	public Set<DeviceFractionSet> getDeviceSets() {
+		return deviceSets;
+	}
+
+	public void setDeviceSets(Set<DeviceFractionSet> deviceSets) {
+		this.deviceSets = deviceSets;
+	}
+	
+	
+	
+	
+}

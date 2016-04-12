@@ -1,0 +1,57 @@
+package web;
+
+import java.util.List;
+import java.util.Set;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import persistence.PersistenceUtil;
+import util.WebSessionUtil;
+import entity.CoinFlip;
+import entity.CoinTool;
+import entity.DiceData;
+import entity.DiceRoll;
+import entity.DiceTool;
+
+
+public class CoinToolConfig extends ActionSupport{
+	
+
+	private CoinTool coinTool;
+	
+	public CoinTool getCoinTool() {
+		return coinTool;
+	}
+
+	public void setCoinTool(CoinTool coinTool) {
+		this.coinTool = coinTool;
+	}
+
+	public String createCoinTool(){
+		PersistenceUtil.persist(coinTool);
+		return "success";
+	}
+	
+	
+
+	public String deleteCoinTools(){
+		List<CoinTool> tools = PersistenceUtil.findAllCoinTools();
+		List<CoinFlip> flips = PersistenceUtil.findAllCoinFlips();
+		
+		for(CoinTool ct:tools){
+			PersistenceUtil.remove(ct);		
+		}
+		
+		for(CoinFlip cf: flips){
+			PersistenceUtil.remove(cf);
+		}
+		
+		return "success";
+	}
+
+}
+
+ 
+	
+ 
+

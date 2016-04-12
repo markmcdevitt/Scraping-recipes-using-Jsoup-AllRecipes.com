@@ -1,0 +1,39 @@
+package entity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+@NamedQueries( {
+	@NamedQuery(name = "SpinnerTool.findAll", query = "select o from SpinnerTool o")
+})
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class SpinnerTool extends Tool{	
+	
+	private int numberOfSegments;
+	
+	public SpinnerTool(){
+		
+	}
+
+	public int getNumberOfSegments() {
+		return numberOfSegments;
+	}
+
+	public void setNumberOfSegments(int numberOfSegments) {
+		this.numberOfSegments = numberOfSegments;
+	}
+
+	
+
+}
