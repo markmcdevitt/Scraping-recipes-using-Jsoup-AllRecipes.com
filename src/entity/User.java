@@ -23,7 +23,9 @@ public class User {
 	private String password;
 	private boolean enabled;
 	private String authority;
-	private List<String> ingredientsOwned;
+
+	@OneToMany
+	private List<IngredientsOwned> ingredientsOwned;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Recipe> recipes;
@@ -38,14 +40,16 @@ public class User {
 
 	}
 
-	public User(String username, String email, String password, boolean enabled, String authority, List<Recipe> recipes,
-			List<WeeklyPlan> weeklyPlan, List<ShoppingList> shoppingList) {
+	public User(String username, String email, String password, boolean enabled, String authority,
+			List<IngredientsOwned> ingredientsOwned, List<Recipe> recipes, List<WeeklyPlan> weeklyPlan,
+			List<ShoppingList> shoppingList) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.enabled = enabled;
 		this.authority = authority;
+		this.ingredientsOwned = ingredientsOwned;
 		this.recipes = recipes;
 		this.weeklyPlan = weeklyPlan;
 		this.shoppingList = shoppingList;
@@ -114,5 +118,14 @@ public class User {
 	public void setShoppingList(List<ShoppingList> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
+
+	public List<IngredientsOwned> getIngredientsOwned() {
+		return ingredientsOwned;
+	}
+
+	public void setIngredientsOwned(List<IngredientsOwned> ingredientsOwned) {
+		this.ingredientsOwned = ingredientsOwned;
+	}
+	
 
 }

@@ -59,8 +59,8 @@ public class NotParsedInfo {
 		
 		List<ShoppingList> list = new ArrayList<ShoppingList>(); 
 		list.add(shoppingList);
-		User user1 = new User("Bob","bob@gmail.com", "letmein2",true,"ROLE_ADMIN",recipeList,fakeWeeklyPlan,list);// creates the user and has his favorites obeject with a list of recipes
-		User user2 = new User("Tim","Tim@gmail.com", "letmein2",true,"ROLE_ADMIN",recipeList,fakeWeeklyPlan,list);// creates the user and has his favorites obeject with a list of recipes
+		User user1 = new User("Bob","bob@gmail.com", "letmein2",true,"ROLE_ADMIN",null,recipeList,fakeWeeklyPlan,list);// creates the user and has his favorites obeject with a list of recipes
+		User user2 = new User("Tim","Tim@gmail.com", "letmein2",true,"ROLE_ADMIN",null,recipeList,fakeWeeklyPlan,list);// creates the user and has his favorites obeject with a list of recipes
 		
 		Recipe recipe = new Recipe("Spring Rolls","this is food blah blah blah 2","imageURL","1", "112", fakeInstructions,ingredientList,"4");
 		PersistenceUtil.merge(shoppingList);//pushing the shopping list to the database

@@ -25,7 +25,7 @@ public class ParsingConfig {
 
 	public void createEverything() throws IOException {
 
-		Document doc = Jsoup.connect("http://allrecipes.com/").get();// ?page=2
+		Document doc = Jsoup.connect("http://allrecipes.com/?page=4").get();// ?page=2
 		Elements recipe = doc.select("article");// going through the table named
 												// article
 		for (Element r : recipe) {
@@ -172,7 +172,7 @@ public class ParsingConfig {
 					List<Recipe> recipes = new ArrayList<Recipe>();
 					recipes.add(recipesFromParsed);
 
-					 User user = new User(chefs, chefs + "@hotmail.com", "letmein2", true, "ROLE_USER", recipes, null, null);
+					 User user = new User(chefs, chefs + "@hotmail.com", "letmein2", true, "ROLE_USER", null,recipes, null, null);
 					 
 					
 					 PersistenceUtil.merge(user);
