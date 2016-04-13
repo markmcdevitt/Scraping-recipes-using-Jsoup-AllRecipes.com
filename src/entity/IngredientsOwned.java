@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +18,6 @@ public class IngredientsOwned {
 	}
 
 	public IngredientsOwned(String ingredientOwned) {
-		super();
 		this.ingredientOwned = ingredientOwned;
 	}
 
