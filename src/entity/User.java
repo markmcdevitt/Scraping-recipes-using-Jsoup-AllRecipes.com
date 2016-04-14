@@ -24,7 +24,7 @@ public class User {
 	private boolean enabled;
 	private String authority;
 
-	@OneToMany
+	@ManyToMany	
 	private List<Allergy> usersAllergys;
 
 	@OneToMany

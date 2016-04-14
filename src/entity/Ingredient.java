@@ -14,13 +14,13 @@ public class Ingredient {
 
 	private String ingredientName;
 
-	private double ingredientAmount;
+	private String ingredientAmount;
 
 	public Ingredient() {
 		super();
 	}
 
-	public Ingredient(String ingredientName, int ingredientAmount) {
+	public Ingredient(String ingredientName, String ingredientAmount) {
 		super();
 		this.ingredientName = ingredientName;
 		this.ingredientAmount = ingredientAmount;
@@ -34,11 +34,11 @@ public class Ingredient {
 		this.ingredientName = ingredientName;
 	}
 
-	public double getIngredientAmount() {
+	public String getIngredientAmount() {
 		return ingredientAmount;
 	}
 
-	public void setIngredientAmount(double ingredientAmount) {
+	public void setIngredientAmount(String ingredientAmount) {
 		this.ingredientAmount = ingredientAmount;
 	}
 

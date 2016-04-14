@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import entity.Allergy;
 import entity.Ingredient;
 import entity.Instructions;
 import entity.Recipe;
@@ -15,7 +17,7 @@ public class NotParsedInfo {
 	private User user;
 	public  void fillTable(){
 		
-		Ingredient fakeIngredient = new Ingredient("cream cheese",2);//making the ingredients that would go into the recipe	
+		Ingredient fakeIngredient = new Ingredient("cream cheese","2");//making the ingredients that would go into the recipe	
 		List<Ingredient> ingredientList = new ArrayList<Ingredient>();
 		ingredientList.add(fakeIngredient);
 		
@@ -47,9 +49,9 @@ public class NotParsedInfo {
 		
 		List<Ingredient> fakeShoppingListcreated = new ArrayList<Ingredient>();//is the ingredients input by the user into the shopping list
 		
-		Ingredient inputIngredients  = new Ingredient("Egg",4);
-		Ingredient inputIngredients2 = new Ingredient("rice",2);
-		Ingredient inputIngredients3 = new Ingredient("chicken",1);
+		Ingredient inputIngredients  = new Ingredient("Egg","4");
+		Ingredient inputIngredients2 = new Ingredient("rice","2");
+		Ingredient inputIngredients3 = new Ingredient("chicken","1");
 		
 		fakeShoppingListcreated.add(inputIngredients);//adds the ingredients to the shoppinglist list haha
 		fakeShoppingListcreated.add(inputIngredients2);
@@ -63,9 +65,27 @@ public class NotParsedInfo {
 		User user2 = new User("Tim","Tim@gmail.com", "letmein2",true,"ROLE_ADMIN",null,null,recipeList,fakeWeeklyPlan,list);// creates the user and has his favorites obeject with a list of recipes
 		
 		Recipe recipe = new Recipe("Spring Rolls","this is food blah blah blah 2","imageURL","1", "112", fakeInstructions,ingredientList,"4");
-		PersistenceUtil.merge(shoppingList);//pushing the shopping list to the database
-		PersistenceUtil.merge(recipe);
-		PersistenceUtil.merge(user1);
+//		PersistenceUtil.merge(shoppingList);//pushing the shopping list to the database
+//		PersistenceUtil.merge(recipe);
+//		PersistenceUtil.merge(user1);
+		
+		Allergy eggs = new Allergy("eggs");
+		Allergy milk = new Allergy("milk");
+		Allergy peanuts = new Allergy("peanuts");
+		Allergy nuts = new Allergy("nuts");
+		Allergy fish = new Allergy("fish");
+		Allergy shellfish = new Allergy("shellfish");
+		Allergy wheat = new Allergy("wheat");
+		Allergy soy = new Allergy("soy");
+		
+		PersistenceUtil.persist(eggs);
+		PersistenceUtil.persist(milk);
+		PersistenceUtil.persist(peanuts);
+		PersistenceUtil.persist(nuts);
+		PersistenceUtil.persist(fish);
+		PersistenceUtil.persist(shellfish);
+		PersistenceUtil.persist(wheat);
+		PersistenceUtil.persist(soy);
 		
 	}
 
