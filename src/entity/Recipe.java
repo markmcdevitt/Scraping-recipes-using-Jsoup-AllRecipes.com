@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -28,6 +29,9 @@ public class Recipe {
 	private String imageURLParse;
 	private String peopleFed;
 	private String calories;
+	private String level;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Category category;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Instructions> instructions;// the list of steps
@@ -48,9 +52,12 @@ public class Recipe {
 
 	}
 
-	public Recipe(String titleParse, String descriptionParse, String imageURLParse, String peopleFed, String calories,
-			List<Instructions> instructions, List<Ingredient> ingredients, String totalRating) {
+	public Recipe(String titleParse, String level, String descriptionParse, String imageURLParse, String peopleFed,
+			String calories, Category category, List<Instructions> instructions, List<Ingredient> ingredients,
+			String totalRating) {
 		super();
+		this.level = level;
+		this.category = category;
 		this.titleParse = titleParse;
 		this.descriptionParse = descriptionParse;
 		this.imageURLParse = imageURLParse;
@@ -61,15 +68,17 @@ public class Recipe {
 		this.totalRating = totalRating;
 	}
 
-	public Recipe(String titleParse, String descriptionParse, String imageURLParse, String peopleFed, String calories,
-			List<Instructions> instructions, List<Ingredient> ingredients, List<WeeklyPlan> weeklyPlans,
-			List<Review> review, String totalRating) {
+	public Recipe(String titleParse, String level, String descriptionParse, String imageURLParse, String peopleFed,
+			String calories, Category category, List<Instructions> instructions, List<Ingredient> ingredients,
+			List<WeeklyPlan> weeklyPlans, List<Review> review, String totalRating) {
 		super();
+		this.level = level;
 		this.titleParse = titleParse;
 		this.descriptionParse = descriptionParse;
 		this.imageURLParse = imageURLParse;
 		this.peopleFed = peopleFed;
 		this.calories = calories;
+		this.category = category;
 		this.instructions = instructions;
 		this.ingredients = ingredients;
 		this.weeklyPlans = weeklyPlans;
@@ -165,25 +174,29 @@ public class Recipe {
 		this.calories = calories;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((descriptionParse == null) ? 0 : descriptionParse.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((imageURLParse == null) ? 0 : imageURLParse.hashCode());
-		result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
-		result = prime * result + ((instructions == null) ? 0 : instructions.hashCode());
-		result = prime * result + ((titleParse == null) ? 0 : titleParse.hashCode());
-		return result;
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 	@Override
 	public String toString() {
-		return "Recipe [titleParse=" + titleParse + ", descriptionParse=" + descriptionParse + ", imageURLParse="
-				+ imageURLParse + ", peopleFed=" + peopleFed + ", calories=" + calories + ", instructions="
-				+ instructions + ", ingredients=" + ingredients + ", weeklyPlans=" + weeklyPlans + ", review=" + review
-				+ ", totalRating=" + totalRating + "]";
+		return "Recipe [id=" + id + ", titleParse=" + titleParse + ", descriptionParse=" + descriptionParse
+				+ ", imageURLParse=" + imageURLParse + ", peopleFed=" + peopleFed + ", calories=" + calories
+				+ ", level=" + level + ", category=" + category + ", instructions=" + instructions + ", ingredients="
+				+ ingredients + ", weeklyPlans=" + weeklyPlans + ", review=" + review + ", totalRating=" + totalRating
+				+ "]";
 	}
 
 }

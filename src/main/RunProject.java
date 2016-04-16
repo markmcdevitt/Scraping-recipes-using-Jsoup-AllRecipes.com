@@ -9,7 +9,7 @@ public class RunProject {
 		NotParsedInfo info = new NotParsedInfo();
 		
 		con.createEverything();
-		info.fillTable();
+		//info.fillTable();
 		
 	}
 	
