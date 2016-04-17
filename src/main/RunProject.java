@@ -8,8 +8,8 @@ public class RunProject {
 		ParsingConfig con = new ParsingConfig();
 		NotParsedInfo info = new NotParsedInfo();
 		
-		con.createEverything();
-		//info.fillTable();
+		//con.createEverything();
+		info.fillTable();
 		
 	}
 	

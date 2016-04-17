@@ -31,7 +31,7 @@ public class ParsingConfig {
 		//http://allrecipes.com/recipes/79/desserts/?page=4
 		//http://allrecipes.com/recipes/80/main-dish/?page=6
 		
-		Document doc = Jsoup.connect("http://allrecipes.com/recipes/87/everyday-cooking/vegetarian/?page=7").get();// ?page=2
+		Document doc = Jsoup.connect("http://allrecipes.com/recipes/87/everyday-cooking/vegetarian/?page=10").get();// ?page=2
 		Elements recipe = doc.select("article");
 		for (Element r : recipe) {
 
@@ -200,7 +200,7 @@ public class ParsingConfig {
 					List<Recipe> recipes = new ArrayList<Recipe>();
 					recipes.add(recipesFromParsed);
 
-					User user = new User(chefs, chefs + "@hotmail.com", "letmein2", true, "ROLE_USER", null, null,
+					User user = new User(chefs, chefs + "@hotmail.com", "letmein2", true, "ROLE_USER",0,null, null, null,
 							recipes, null, null);
 
 					PersistenceUtil.merge(user);

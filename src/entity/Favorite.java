@@ -1,27 +1,29 @@
 package entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Category {
+public class Favorite {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String category;
 
-	public Category() {
+	@OneToOne(cascade = CascadeType.ALL)
+	private Recipe recipe;
+
+	public Favorite() {
+
 	}
 
-
-	public Category(String category) {
-		super();
-		this.category = category;
+	public Favorite(Recipe recipe) {
+		this.recipe = recipe;
 	}
-
 
 	public int getId() {
 		return id;
@@ -31,18 +33,17 @@ public class Category {
 		this.id = id;
 	}
 
-	public String getCategory() {
-		return category;
+	public Recipe getRecipe() {
+		return recipe;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setRecipe(Recipe recipe) {
+		this.recipe = recipe;
 	}
-
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", category=" + category + "]";
+		return "Favorite [id=" + id + ", recipe=" + recipe + "]";
 	}
 
 }

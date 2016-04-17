@@ -23,8 +23,12 @@ public class User {
 	private String password;
 	private boolean enabled;
 	private String authority;
+	private int userLevel;
 
-	@ManyToMany	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Favorite> usersFavorites;
+
+	@ManyToMany
 	private List<Allergy> usersAllergys;
 
 	@OneToMany
@@ -43,14 +47,17 @@ public class User {
 
 	}
 
-	public User(String username, String email, String password, boolean enabled, String authority,
-			List<Allergy> usersAllergys, List<IngredientsOwned> ingredientsOwned, List<Recipe> recipes,
-			List<WeeklyPlan> weeklyPlan, List<ShoppingList> shoppingList) {
+	public User(String username, String email, String password, boolean enabled, String authority, int userLevel,
+			List<Favorite> usersFavorites, List<Allergy> usersAllergys, List<IngredientsOwned> ingredientsOwned,
+			List<Recipe> recipes, List<WeeklyPlan> weeklyPlan, List<ShoppingList> shoppingList) {
+		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.enabled = enabled;
 		this.authority = authority;
+		this.userLevel = userLevel;
+		this.usersFavorites = usersFavorites;
 		this.usersAllergys = usersAllergys;
 		this.ingredientsOwned = ingredientsOwned;
 		this.recipes = recipes;
@@ -136,6 +143,30 @@ public class User {
 
 	public void setUsersAllergys(List<Allergy> usersAllergys) {
 		this.usersAllergys = usersAllergys;
+	}
+
+	public int getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(int userLevel) {
+		this.userLevel = userLevel;
+	}
+
+	public List<Favorite> getUsersFavorites() {
+		return usersFavorites;
+	}
+
+	public void setUsersFavorites(List<Favorite> usersFavorites) {
+		this.usersFavorites = usersFavorites;
+	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", email=" + email + ", password=" + password + ", enabled=" + enabled
+				+ ", authority=" + authority + ", userLevel=" + userLevel + ", usersFavorites=" + usersFavorites
+				+ ", usersAllergys=" + usersAllergys + ", ingredientsOwned=" + ingredientsOwned + ", recipes=" + recipes
+				+ ", weeklyPlan=" + weeklyPlan + ", shoppingList=" + shoppingList + "]";
 	}
 
 }
